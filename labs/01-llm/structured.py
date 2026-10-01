@@ -33,11 +33,8 @@ def analyze_question(client: LLMClient, question: str) -> QuestionAnalysis:
     response = client.chat(messages, temperature=0, json_mode=True)
     print(f"Texto crudo del LLM:\n{response.text}\n")
 
-    # TODO 6: convierte el texto en un QuestionAnalysis en dos pasos separados:
-    #   1. json.loads(...)                     → ¿es JSON válido?
-    #   2. QuestionAnalysis.model_validate(...) → ¿cumple el esquema?
-    raise NotImplementedError("Completa analyze_question")
-
+    data = json.loads(response.text)
+    return QuestionAnalysis.model_validate(data)
 
 def main() -> None:
     question = " ".join(sys.argv[1:]) or input("Pregunta: ")

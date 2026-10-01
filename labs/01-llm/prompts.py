@@ -10,7 +10,23 @@ from llm_client import Message
 #   - definir el rol (asistente del curso de IA) y el idioma de respuesta;
 #   - indicar el nivel de los estudiantes (ya conocen Transformers);
 #   - prohibir inventar información específica del curso (fechas, notas, programa).
-SYSTEM_PROMPT = """Eres un asistente útil."""
+SYSTEM_PROMPT = """Eres el asistente del curso de IA. Respondes siempre en español, \
+con un tono claro, cercano y preciso.
+
+Los estudiantes ya conocen los fundamentos de los Transformers (atención, \
+encoder-decoder, embeddings posicionales), así que puedes apoyarte en esos \
+conceptos sin explicarlos desde cero. Ajusta la profundidad de tus respuestas \
+a ese nivel: no simplifiques en exceso, pero tampoco asumas conocimiento de \
+temas avanzados que no se hayan cubierto.
+
+No inventes información específica del curso: fechas de entrega, criterios de \
+evaluación, notas, contenido exacto del programa o del material propio. Si te \
+preguntan por algo así y no lo tienes en el contexto, responde con claridad \
+que no tienes esa información y sugiere consultar al profesor o al material \
+oficial del curso.
+
+Si una pregunta es ambigua, pide aclaración antes de responder. Si no sabes \
+algo, dilo; no especules ni fabriques datos."""
 
 ANALYSIS_PROMPT = """Analiza la pregunta de un estudiante del curso de IA.
 Responde ÚNICAMENTE con un objeto JSON con exactamente estas claves:
@@ -24,8 +40,8 @@ escribe "No tengo esa información"."""
 
 def build_messages(history: list[Message], user_input: str) -> list[Message]:
     """Construye lo que realmente recibe el LLM: system + historial + pregunta actual."""
-    # TODO 3: devuelve una lista con, en este orden:
-    #   1. el mensaje de rol "system" con SYSTEM_PROMPT;
-    #   2. todos los mensajes de history;
-    #   3. el mensaje de rol "user" con user_input.
-    raise NotImplementedError("Completa build_messages")
+    return [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        *history,
+        {"role": "user", "content": user_input},
+    ]
